@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lab 4: What I'd Do Differently</title>
+<style>
+  :root {
+    --bg:#ffffff; --surface:#f7f7f5; --card:#ffffff; --border:#e0ddd4;
+    --text:#2c2c2a; --text-secondary:#5f5e5a; --text-muted:#888780;
+    --coral-50:#FAECE7; --coral-600:#993C1D; --coral-800:#4A1B0C;
+    --teal-50:#E1F5EE; --teal-600:#0F6E56; --teal-800:#085041;
+    --code-bg:#1e1e1c;
+  }
+  [data-mode="dark"] {
+    --bg:#1a1a18; --surface:#232320; --card:#2a2a27; --border:#3a3a36;
+    --text:#e8e6dd; --text-secondary:#b4b2a9; --text-muted:#888780;
+    --coral-50:#4A1B0C; --coral-600:#F0997B; --coral-800:#FAECE7;
+    --teal-50:#085041; --teal-600:#5DCAA5; --teal-800:#E1F5EE;
+    --code-bg:#0e0e0d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-mode="light"]) {
+      --bg:#1a1a18; --surface:#232320; --card:#2a2a27; --border:#3a3a36;
+      --text:#e8e6dd; --text-secondary:#b4b2a9; --text-muted:#888780;
+      --coral-50:#4A1B0C; --coral-600:#F0997B; --coral-800:#FAECE7;
+      --teal-50:#085041; --teal-600:#5DCAA5; --teal-800:#E1F5EE;
+      --code-bg:#0e0e0d;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text); padding: 1.5rem 1rem 2.5rem; max-width: 760px; margin: 0 auto;
+  }
+  h1 { font-size: 20px; font-weight: 600; margin: 0 0 4px; }
+  .subtitle { color: var(--text-secondary); font-size: 14px; margin: 0 0 1.5rem; }
+  .columns { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .col { flex: 1; min-width: 260px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; padding: 4px 10px; border-radius: 6px; margin-bottom: 8px; }
+  .tag.before { background: var(--coral-50); color: var(--coral-800); }
+  .tag.after { background: var(--teal-50); color: var(--teal-800); }
+  pre {
+    background: var(--code-bg); color: #d4d4d2; border-radius: 10px; padding: 14px 16px;
+    font-family: "SF Mono", Consolas, monospace; font-size: 12.5px; line-height: 1.6; margin: 0;
+    overflow-x: auto;
+  }
+  .hl-coral { color: #F0997B; }
+  .hl-teal { color: #5DCAA5; }
+  .caption { font-size: 13px; color: var(--text-secondary); margin-top: 10px; line-height: 1.5; }
+  .footer-note { margin-top: 1.5rem; font-size: 12px; color: var(--text-muted); text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>What I'd do differently: one hardcoded line</h1>
+<p class="subtitle">A two minute change that turns a file written for one person into a file a team can reuse.</p>
+
+<div class="columns">
+  <div class="col">
+    <span class="tag before">This lab, as written</span>
+    <pre>resource "azurerm_resource_group" "rg" {
+  name = <span class="hl-coral">"rg-lab04-tf-giovanni"</span>
+  location = "East US"
+}</pre>
+    <p class="caption">Works fine solo. Breaks the moment a second person reuses this exact file, since the name is baked in.</p>
+  </div>
+  <div class="col">
+    <span class="tag after">One variable added</span>
+    <pre>variable "your_name" {
+  type = string
+}
+
+resource "azurerm_resource_group" "rg" {
+  name = "rg-lab04-tf-<span class="hl-teal">${var.your_name}</span>"
+  location = "East US"
+}</pre>
+    <p class="caption">The configuration file never changes again. Only a separate variables file does, per person or per environment.</p>
+  </div>
+</div>
+
+<p class="footer-note">Lab 4: Infrastructure as Code with Terraform</p>
+
+</body>
+</html>
